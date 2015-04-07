@@ -16,6 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".TripList"
+            android:label="@string/title_activity_trip_list" >
+        </activity>
+        <activity
+            android:name=".ItineraryList"
+            android:label="@string/title_activity_itinerary_list" >
+        </activity>
     </application>
 
 </manifest>

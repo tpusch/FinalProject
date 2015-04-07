@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.mikeandtyler.travelapp.TripList"
+    android:id="@+id/TripLayout">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true"
+        android:weightSum="1"
+        android:layout_alignParentTop="true">
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Trips"
+            android:id="@+id/textView2"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="See the other list"
+            android:id="@+id/button2"
+            android:layout_gravity="center_horizontal"
+            android:onClick="nextList" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="214dp"
+            android:id="@+id/listView"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1.00"
+            android:nestedScrollingEnabled="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Trip"
+            android:id="@+id/button"
+            android:layout_gravity="center_horizontal"
+            android:onClick="newTrip" />
+
+    </LinearLayout>
+
+</RelativeLayout>
