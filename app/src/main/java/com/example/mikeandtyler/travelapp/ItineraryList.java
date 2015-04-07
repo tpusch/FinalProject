@@ -54,7 +54,7 @@ public class ItineraryList extends FragmentActivity implements EventViewer.OnFra
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
-
+//fuck git
     public void editEvent(View view){
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         CreateEvent createEvent = new CreateEvent();
