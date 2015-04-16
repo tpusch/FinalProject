@@ -11,13 +11,13 @@ public class Trip {
 
     private List<Event> events = new ArrayList<>();
     private Date startDate, endDate;
-    private List<String> locations = new ArrayList<>();
+    private String location;
 
-    public Trip(List<Event> events, Date startDate, Date endDate, List<String> locations) {
+    public Trip(List<Event> events, Date startDate, Date endDate, String location) {
         this.events = events;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.locations = locations;
+        this.location = location;
     }
 
     public void setStartDate(Date startDate) {
@@ -36,12 +36,8 @@ public class Trip {
         events.remove(event);
     }
 
-    public void addLocation(String location) {
-        locations.add(location);
-    }
-
-    public void removeLocation(String location) {
-        locations.remove(location);
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public List<Event> getEvents() {
@@ -56,7 +52,7 @@ public class Trip {
         return endDate;
     }
 
-    public List<String> getLocations() {
-        return locations;
+    public String getLocation() {
+        return location;
     }
 }
