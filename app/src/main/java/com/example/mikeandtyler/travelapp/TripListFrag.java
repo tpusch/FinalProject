@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -57,7 +58,7 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
 
         database = new CreateSequentialFile();
         database.openReadFile();
-        //trips = database.loadTrips();
+        trips = database.loadTrips();
         database.closeReadFile();
 
         mAdapter = new ArrayAdapter<Trip>(getActivity(), android.R.layout.simple_list_item_single_choice, trips);

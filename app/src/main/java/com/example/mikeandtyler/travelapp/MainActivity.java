@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -19,8 +21,11 @@ public class MainActivity extends ActionBarActivity {
         CreateSequentialFile file = new CreateSequentialFile();
         file.openWriteFile();
         Date d = new Date();
-        Trip trip = new Trip(null, d, d, "first Trip");
-//      file.saveTrip(trip);
+        Event event = new Food(d, "string", 2.2f);
+        List<Event> events = new ArrayList<>();
+        events.add(event);
+        Trip trip = new Trip(events, d, d, "first Trip");
+        file.saveTrip(trip);
         file.closeWriteFile();
 
 
