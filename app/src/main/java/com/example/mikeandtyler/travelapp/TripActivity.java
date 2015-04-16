@@ -4,19 +4,31 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class TripList extends FragmentActivity implements CreateTrip.OnFragmentInteractionListener {
+
+public class TripActivity extends FragmentActivity implements CreateTripFrag.OnFragmentInteractionListener, TripListFrag.OnFragmentInteractionListener{
+
+    FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_list);
+        setContentView(R.layout.activity_trips);
+
+        TripListFrag tripListFrag = new TripListFrag();
+
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.TripLayout, tripListFrag, "TRIP_LIST");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
 
 
@@ -43,25 +55,32 @@ public class TripList extends FragmentActivity implements CreateTrip.OnFragmentI
     }
 
     public void newTrip(View view){
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        CreateTrip createTrip = new CreateTrip();
-        fragmentTransaction.add(R.id.TripLayout, createTrip, "CREATE_TRIP");
+        CreateTripFrag createTripFrag = new CreateTripFrag();
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.TripLayout, createTripFrag, "CREATE_TRIP");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
     public void submitTrip(View view){
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.remove(getFragmentManager().findFragmentByTag("CREATE_TRIP"));
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        TripListFrag tripListFrag = new TripListFrag();
+        fragmentTransaction.replace(R.id.TripLayout, tripListFrag, "TRIP_LIST");
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
     public void nextList(View view){
-        Intent i = new Intent(this, ItineraryList.class);
+        Intent i = new Intent(this, EventActivity.class);
         startActivity(i);
     }
 
     public void onFragmentInteraction(Uri uri){
 
     }
+
+    public void onTripFragmentInteraction(Uri uri){
+
+    }
+
 }

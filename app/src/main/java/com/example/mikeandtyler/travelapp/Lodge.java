@@ -7,6 +7,10 @@ import java.util.Date;
  */
 public class Lodge extends Event{
 
+    public Lodge() {
+        this(null, "", 0.0f);
+    }
+
     public Lodge(Date date, String location, float duration) {
         super(date, location, "lodge", duration);
     }

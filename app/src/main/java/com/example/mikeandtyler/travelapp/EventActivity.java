@@ -3,19 +3,32 @@ package com.example.mikeandtyler.travelapp;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 
-public class ItineraryList extends FragmentActivity implements EventViewer.OnFragmentInteractionListener, CreateEvent.OnFragmentInteractionListener {
+public class EventActivity extends FragmentActivity implements EventViewerFrag.OnFragmentInteractionListener, CreateEventFrag.OnFragmentInteractionListener, EventListFrag.OnFragmentInteractionListener {
+
+    FragmentTransaction fragmentTransaction;
+    EventListFrag eventListFrag;
+    EventViewerFrag eventViewerFrag;
+    CreateEventFrag createEventFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_itinerary_list);
+        setContentView(R.layout.activity_events);
+
+        eventListFrag = new EventListFrag();
+        eventViewerFrag = new EventViewerFrag();
+        createEventFrag = new CreateEventFrag();
+
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.EventLayout, eventListFrag, "LIST_EVENT");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 
@@ -42,31 +55,28 @@ public class ItineraryList extends FragmentActivity implements EventViewer.OnFra
     }
 
     public void submitEvent(View view){
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.remove(getFragmentManager().findFragmentByTag("CREATE_EVENT"));
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.EventLayout, eventListFrag, "LIST_EVENT");
         fragmentTransaction.commit();
     }
 
     public void newEvent(View view){
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        CreateEvent createEvent = new CreateEvent();
-        fragmentTransaction.add(R.id.EventLayout, createEvent, "CREATE_EVENT");
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.EventLayout, createEventFrag, "CREATE_EVENT");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 //fuck git
     public void editEvent(View view){
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        CreateEvent createEvent = new CreateEvent();
-        fragmentTransaction.replace(R.id.EventLayout, createEvent, "CREATE_EVENT");
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.EventLayout, createEventFrag, "CREATE_EVENT");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
     public void seeEvent(View view){
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        EventViewer eventViewer = new EventViewer();
-        fragmentTransaction.add(R.id.EventLayout, eventViewer, "VIEW_EVENT");
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.EventLayout, eventViewerFrag, "VIEW_EVENT");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

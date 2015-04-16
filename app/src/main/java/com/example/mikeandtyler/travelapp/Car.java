@@ -7,6 +7,10 @@ import java.util.Date;
  */
 public class Car extends Travel{
 
+    public Car() {
+        this(null, "", "", 0.0f);
+    }
+
     public Car(Date date, String fromCity, String toCity, float duration) {
         super(date, fromCity, toCity, duration, "car");
     }

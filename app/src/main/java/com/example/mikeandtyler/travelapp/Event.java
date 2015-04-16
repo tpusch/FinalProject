@@ -1,15 +1,20 @@
 package com.example.mikeandtyler.travelapp;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by XMZALA on 4/16/15.
  */
-public abstract class Event {
+public abstract class Event implements Serializable {
 
     private Date date;
     private String location, type;
     private float duration;
+
+    public Event() {
+        this(null, "", "", 0.0f);
+    }
 
     public Event(Date date, String location, String type, float duration) {
         this.date = date;

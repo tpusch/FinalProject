@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.Date;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -14,6 +16,14 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        CreateSequentialFile file = new CreateSequentialFile();
+        file.openWriteFile();
+        Date d = new Date();
+        Trip trip = new Trip(null, d, d, "first Trip");
+//      file.saveTrip(trip);
+        file.closeWriteFile();
+
+
     }
 
 
@@ -41,7 +51,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void go(View view){
 
-        Intent i = new Intent(this, TripList.class);
+        Intent i = new Intent(this, TripActivity.class);
         startActivity(i);
 
     }

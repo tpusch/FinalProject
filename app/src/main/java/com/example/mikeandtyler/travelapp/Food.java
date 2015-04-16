@@ -7,6 +7,10 @@ import java.util.Date;
  */
 public class Food extends Event{
 
+    public Food() {
+        this(null, "", 0.0f);
+    }
+
     public Food(Date date, String location, float duration) {
         super(date, location, "food", duration);
     }

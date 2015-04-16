@@ -1,5 +1,6 @@
 package com.example.mikeandtyler.travelapp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,11 +8,15 @@ import java.util.List;
 /**
  * Created by XMZALA on 4/16/15.
  */
-public class Trip {
+public class Trip implements Serializable{
 
     private List<Event> events = new ArrayList<>();
     private Date startDate, endDate;
     private String location;
+
+    public Trip() {
+        this(null, null, null, "");
+    }
 
     public Trip(List<Event> events, Date startDate, Date endDate, String location) {
         this.events = events;

@@ -17,11 +17,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TripList"
+            android:name=".TripActivity"
             android:label="@string/title_activity_trip_list" >
         </activity>
         <activity
-            android:name=".ItineraryList"
+            android:name=".EventActivity"
             android:label="@string/title_activity_itinerary_list" >
         </activity>
     </application>

@@ -9,6 +9,10 @@ public class Train extends Travel{
 
     private int trainNumber;
 
+    public Train() {
+        this(null, "", "", 0.0f, 0);
+    }
+
     public Train(Date date, String fromCity, String toCity, float duration, int trainNumber) {
         super(date, fromCity, toCity, duration, "train");
         this.trainNumber = trainNumber;
