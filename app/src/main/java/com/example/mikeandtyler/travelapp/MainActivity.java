@@ -55,9 +55,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void go(View view){
-
         Intent i = new Intent(this, TripActivity.class);
         startActivity(i);
-
     }
 }

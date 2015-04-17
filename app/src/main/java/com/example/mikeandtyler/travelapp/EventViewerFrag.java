@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -22,10 +23,10 @@ public class EventViewerFrag extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    TextView nameText, typeText, locationText, dateText, durationText;
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    Event event;
 
     private OnFragmentInteractionListener mListener;
 
@@ -55,8 +56,7 @@ public class EventViewerFrag extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            event = (Event) getArguments().getSerializable("event");
         }
     }
 
@@ -64,7 +64,19 @@ public class EventViewerFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_event_viewer, container, false);
+        View view = inflater.inflate(R.layout.fragment_event_viewer, container, false);
+        nameText = (TextView) view.findViewById(R.id.nameText);
+        typeText = (TextView) view.findViewById(R.id.typeText);
+        locationText = (TextView) view.findViewById(R.id.locationText);
+        dateText = (TextView) view.findViewById(R.id.dateText);
+        durationText = (TextView) view.findViewById(R.id.durationText);
+
+        nameText.setText(event.toString());
+        typeText.setText(event.getType());
+        locationText.setText(event.getLocation());
+        dateText.setText(event.getDate().toString());
+        durationText.setText(String.valueOf(event.getDuration()));
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

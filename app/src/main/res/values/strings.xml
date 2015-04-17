@@ -8,4 +8,16 @@
     <string name="title_activity_itinerary_list">ItineraryList</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string-array name="eventTypes">
+        <item>Dining</item>
+        <item>Leisure</item>
+        <item>Lodging</item>
+        <item>Travel</item>
+    </string-array>
+    <string-array name="travelTypes">
+        <item>Flight</item>
+        <item>Train</item>
+        <item>Car</item>
+    </string-array>
+
 </resources>

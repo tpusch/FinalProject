@@ -61,7 +61,7 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
         trips = database.loadTrips();
         database.closeReadFile();
 
-        mAdapter = new ArrayAdapter<Trip>(getActivity(), android.R.layout.simple_list_item_single_choice, trips);
+        mAdapter = new ArrayAdapter<Trip>(getActivity(), android.R.layout.simple_list_item_1, trips);
     }
 
     @Override
@@ -80,16 +80,14 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
 
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(int i) {
         if (mListener != null) {
-            mListener.onTripFragmentInteraction(uri);
+            mListener.onTripFragmentInteraction(trips.get(i));
         }
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-
+        mListener.onTripFragmentInteraction(trips.get(position));
     }
 
     @Override
@@ -121,7 +119,7 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onTripFragmentInteraction(Uri uri);
+        public void onTripFragmentInteraction(Trip trip);
     }
 
 }

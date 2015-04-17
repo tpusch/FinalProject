@@ -71,16 +71,16 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
     }
 
     public void nextList(View view){
-        Intent i = new Intent(this, EventActivity.class);
-        startActivity(i);
+
     }
 
     public void onFragmentInteraction(Uri uri){
 
     }
 
-    public void onTripFragmentInteraction(Uri uri){
-
+    public void onTripFragmentInteraction(Trip trip){
+        Intent i = new Intent(this, EventActivity.class);
+        i.putExtra("trip", trip);
+        startActivity(i);
     }
-
 }

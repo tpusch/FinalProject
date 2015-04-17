@@ -54,4 +54,9 @@ public abstract class Event implements Serializable {
     public float getDuration() {
         return duration;
     }
+
+    @Override
+    public String toString() {
+        return date.toString();
+    }
 }

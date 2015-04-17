@@ -1,6 +1,7 @@
 package com.example.mikeandtyler.travelapp;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         setContentView(R.layout.activity_events);
 
         eventListFrag = new EventListFrag();
+        eventListFrag.setArguments(getIntent().getExtras());
         eventViewerFrag = new EventViewerFrag();
         createEventFrag = new CreateEventFrag();
 
@@ -66,7 +68,7 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
-//fuck git
+
     public void editEvent(View view){
         fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.EventLayout, createEventFrag, "CREATE_EVENT");
@@ -81,7 +83,16 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         fragmentTransaction.commit();
     }
 
-    public void onFragmentInteraction(Uri uri){
+    public void onFragmentInteraction(Event event){
+        Bundle args = new Bundle();
+        args.putSerializable("event", event);
+        eventViewerFrag.setArguments(args);
 
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.EventLayout, eventViewerFrag, "VIEW_EVENT");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
+
+    public void onFragmentInteraction(Uri uri){}
 }

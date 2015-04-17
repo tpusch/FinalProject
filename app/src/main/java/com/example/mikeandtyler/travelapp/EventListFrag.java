@@ -1,12 +1,18 @@
 package com.example.mikeandtyler.travelapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+
+import java.util.List;
 
 
 /**
@@ -17,15 +23,18 @@ import android.view.ViewGroup;
  * Use the {@link EventListFrag#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventListFrag extends Fragment {
+public class EventListFrag extends Fragment implements AbsListView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    Trip trip;
+    List<Event> events;
+
+    private ArrayAdapter mAdapter;
+    private AbsListView mListView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -55,23 +64,35 @@ public class EventListFrag extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            trip = (Trip) getArguments().getSerializable("trip");
+            events = trip.getEvents();
         }
+
+        mAdapter = new ArrayAdapter<Event>(getActivity(), android.R.layout.simple_selectable_list_item, events);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_event_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_event_list, container, false);
+
+        mListView = (AbsListView) view.findViewById(android.R.id.list);
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+//    public void onButtonPressed(Uri uri) {
+//        if (mListener != null) {
+//            mListener.onFragmentInteraction(uri);
+//        }
+//    }
+
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mListener.onFragmentInteraction(events.get(position));
     }
 
     @Override
@@ -103,7 +124,7 @@ public class EventListFrag extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onFragmentInteraction(Event event);
     }
 
 }
