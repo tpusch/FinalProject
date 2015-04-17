@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +18,31 @@ import java.util.List;
 public class TripActivity extends FragmentActivity implements CreateTripFrag.OnFragmentInteractionListener, TripListFrag.OnFragmentInteractionListener{
 
     FragmentTransaction fragmentTransaction;
+    TripListFrag tripListFrag;
+
+    CreateSequentialFile database;
+    List<Trip> trips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trips);
 
-        TripListFrag tripListFrag = new TripListFrag();
+        tripListFrag = new TripListFrag();
 
+        database = new CreateSequentialFile();
+        database.openReadFile(this);
+        trips = database.loadTrips();
+        database.closeReadFile();
+
+        Bundle args = new Bundle();
+        args.putInt("size", trips.size());
+        for(int i = 0; i < trips.size(); i++){
+            args.putSerializable("trip"+i, trips.get(i));
+        }
+        tripListFrag.setArguments(args);
+
+        Log.d("size", String.valueOf(trips.size()));
         fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.TripLayout, tripListFrag, "TRIP_LIST");
         fragmentTransaction.addToBackStack(null);
@@ -31,6 +50,15 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
 
     }
 
+    @Override
+    protected void onStop(){
+        super.onStop();
+        database.openWriteFile(this);
+        for(int i = 0; i < trips.size(); i++){
+            database.saveTrip(trips.get(i));
+        }
+        database.closeWriteFile();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -63,8 +91,17 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
     }
 
     public void submitTrip(View view){
+        EditText editText = (EditText) findViewById(R.id.editText);
+        Trip trip = new Trip(null, null, null, editText.getText().toString());
+        trips.add(trip);
+        Bundle args = new Bundle();
+        args.putInt("size", trips.size());
+        for(int i = 0; i < trips.size(); i++){
+            args.putSerializable("trip"+i, trips.get(i));
+        }
+        tripListFrag.setArguments(args);
         fragmentTransaction = getFragmentManager().beginTransaction();
-        TripListFrag tripListFrag = new TripListFrag();
+
         fragmentTransaction.replace(R.id.TripLayout, tripListFrag, "TRIP_LIST");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

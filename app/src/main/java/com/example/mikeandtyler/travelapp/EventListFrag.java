@@ -12,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -63,9 +64,12 @@ public class EventListFrag extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        events = new ArrayList<>();
         if (getArguments() != null) {
             trip = (Trip) getArguments().getSerializable("trip");
-            events = trip.getEvents();
+            if(trip.getEvents() != null) {
+                events = trip.getEvents();
+            }
         }
 
         mAdapter = new ArrayAdapter<Event>(getActivity(), android.R.layout.simple_selectable_list_item, events);

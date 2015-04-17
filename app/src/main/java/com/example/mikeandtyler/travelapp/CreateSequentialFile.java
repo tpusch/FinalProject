@@ -1,5 +1,7 @@
 package com.example.mikeandtyler.travelapp;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import java.io.EOFException;
@@ -22,22 +24,20 @@ public class CreateSequentialFile {
     private ObjectOutputStream output;
     private ObjectInputStream input;
 
-    public CreateSequentialFile(){
+    public CreateSequentialFile(){}
 
-    }
-
-    public void openWriteFile() {
+    public void openWriteFile(Activity activity) {
         try {
-            output = new ObjectOutputStream(new FileOutputStream(new File("trips.ser")));
+            output = new ObjectOutputStream(activity.openFileOutput("trips.ser", Context.MODE_PRIVATE));
         }
         catch(IOException ioException) {
             Log.d("error", ioException.toString());
         }
     }
 
-    public void openReadFile(){
+    public void openReadFile(Activity activity){
         try {
-            input = new ObjectInputStream(new FileInputStream("trips.ser"));
+            input = new ObjectInputStream(activity.openFileInput("trips.ser"));
         }
         catch(IOException ioException) {
             Log.d("error", ioException.toString());
@@ -46,37 +46,37 @@ public class CreateSequentialFile {
 
     public ArrayList<Trip> loadTrips() {
         ArrayList<Trip> tripList = new ArrayList<Trip>();
-//        try{
-//            while(true){
-//               trip = (Trip) input.readObject();
-//                tripList.add(trip);
-//            }
-//        }
-//        catch(EOFException endOfFileException){
-//            Log.d("error", endOfFileException.toString());
-//        }
-//        catch(ClassNotFoundException classNotFoundException){
-//            Log.d("error", classNotFoundException.toString());
-//        }
-//        catch(IOException ioException){
-//            Log.d("error", ioException.toString());
-//        }
-        Date d = new Date();
-        Event event = new Food(d, "string", 2.2f);
-        List<Event> events = new ArrayList<>();
-        events.add(event);
-        Trip trip = new Trip(events, d, d, "first Trip");
-        tripList.add(trip);
+        try{
+            while(true){
+                   Trip trip = (Trip) input.readObject();
+                   tripList.add(trip);
+            }
+        }
+        catch(EOFException endOfFileException){
+            Log.d("error", endOfFileException.toString());
+        }
+        catch(ClassNotFoundException classNotFoundException){
+            Log.d("error", classNotFoundException.toString());
+        }
+        catch(IOException ioException){
+            Log.d("error", ioException.toString());
+        }
+//        Date d = new Date();
+//        Event event = new Food(d, "string", 2.2f);
+//        List<Event> events = new ArrayList<>();
+//        events.add(event);
+//        Trip trip = new Trip(events, d, d, "first Trip");
+//        tripList.add(trip);
         return tripList;
     }
 
     public void saveTrip(Trip trip) {
-//        try {
-//            output.writeObject(trip);
-//        }
-//        catch(IOException ioException) {
-//            Log.d("error", ioException.toString());
-//        }
+        try {
+            output.writeObject(trip);
+        }
+        catch(IOException ioException) {
+            Log.d("error", ioException.toString());
+        }
     }
 
     public void closeWriteFile() {

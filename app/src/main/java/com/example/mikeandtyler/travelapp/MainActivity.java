@@ -18,17 +18,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        CreateSequentialFile file = new CreateSequentialFile();
-        file.openWriteFile();
-        Date d = new Date();
-        Event event = new Food(d, "string", 2.2f);
-        List<Event> events = new ArrayList<>();
-        events.add(event);
-        Trip trip = new Trip(events, d, d, "first Trip");
-        file.saveTrip(trip);
-        file.closeWriteFile();
-
-
     }
 
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +27,12 @@ import java.util.List;
  */
 public class TripListFrag extends Fragment implements AbsListView.OnItemClickListener {
 
-    CreateSequentialFile database;
-    List<Trip> trips;
     private ArrayAdapter mAdapter;
     private AbsListView mListView;
 
     private OnFragmentInteractionListener mListener;
+    List<Trip> trips;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -55,12 +56,15 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        database = new CreateSequentialFile();
-        database.openReadFile();
-        trips = database.loadTrips();
-        database.closeReadFile();
-
+        trips = new ArrayList<>();
+        if (getArguments() != null) {
+            int size = getArguments().getInt("size");
+            Log.d("size again", String.valueOf(size));
+            for(int i = 0; i < size; i++){
+                Trip trip = (Trip) getArguments().getSerializable("trip"+i);
+                trips.add(trip);
+            }
+        }
         mAdapter = new ArrayAdapter<Trip>(getActivity(), android.R.layout.simple_list_item_1, trips);
     }
 
