@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
     private String mParam1;
     private String mParam2;
     Spinner eventSpinner, travelSpinner;
+    Boolean newEvent;
 
     private OnFragmentInteractionListener mListener;
 
@@ -60,8 +62,7 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            newEvent = getArguments().getBoolean("newEvent");
         }
     }
 
@@ -74,6 +75,11 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
         eventSpinner = (Spinner) view.findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.eventTypes, android.R.layout.simple_spinner_dropdown_item);
         eventSpinner.setAdapter(adapter);
+        eventSpinner.setOnItemSelectedListener(this);
+
+        travelSpinner = (Spinner) view.findViewById(R.id.travelSpinner);
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(getActivity(), R.array.travelTypes, android.R.layout.simple_spinner_dropdown_item);
+        travelSpinner.setAdapter(adapter1);
 
         return view;
     }
@@ -81,7 +87,7 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentInteraction(eventSpinner.getSelectedItem().toString());
         }
     }
 
@@ -90,9 +96,8 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getItemAtPosition(position) == 0) {
-
-        }
+        Log.d("Create Event", eventSpinner.getSelectedItem().toString());
+        mListener.onFragmentInteraction(eventSpinner.getSelectedItem().toString());
     }
 
     @Override
@@ -124,7 +129,7 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onFragmentInteraction(String event);
     }
 
 }

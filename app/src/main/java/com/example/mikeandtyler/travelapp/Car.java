@@ -8,10 +8,10 @@ import java.util.Date;
 public class Car extends Travel{
 
     public Car() {
-        this(null, "", "", 0.0f);
+        this(null, "", "", "", "");
     }
 
-    public Car(Date date, String fromCity, String toCity, float duration) {
-        super(date, fromCity, toCity, duration, "car");
+    public Car(Date date, String fromCity, String toCity, String time, String info) {
+        super(date, fromCity, toCity, time, "Car", info);
     }
 }

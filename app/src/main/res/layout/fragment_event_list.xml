@@ -27,15 +27,6 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="See an event"
-            android:id="@+id/button7"
-            android:layout_gravity="center_horizontal"
-            android:onClick="seeEvent" />
-
         <ListView
             android:layout_width="match_parent"
             android:layout_height="214dp"

@@ -3,6 +3,7 @@ package com.example.mikeandtyler.travelapp;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.widget.DatePicker;
 
 import java.io.EOFException;
 import java.io.File;
@@ -12,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -35,12 +37,14 @@ public class CreateSequentialFile {
         }
     }
 
-    public void openReadFile(Activity activity){
+    public boolean openReadFile(Activity activity){
         try {
             input = new ObjectInputStream(activity.openFileInput("trips.ser"));
+            return true;
         }
         catch(IOException ioException) {
             Log.d("error", ioException.toString());
+            return false;
         }
     }
 
@@ -61,12 +65,6 @@ public class CreateSequentialFile {
         catch(IOException ioException){
             Log.d("error", ioException.toString());
         }
-//        Date d = new Date();
-//        Event event = new Food(d, "string", 2.2f);
-//        List<Event> events = new ArrayList<>();
-//        events.add(event);
-//        Trip trip = new Trip(events, d, d, "first Trip");
-//        tripList.add(trip);
         return tripList;
     }
 
@@ -99,5 +97,16 @@ public class CreateSequentialFile {
         catch(IOException ioException){
             Log.d("error", ioException.toString());
         }
+    }
+
+    public static java.util.Date getDateFromDatePicker(DatePicker datePicker){
+        int day = datePicker.getDayOfMonth();
+        int month = datePicker.getMonth();
+        int year =  datePicker.getYear();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+
+        return calendar.getTime();
     }
 }

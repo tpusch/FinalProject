@@ -7,11 +7,22 @@ import java.util.Date;
  */
 public class Lodge extends Event{
 
+    private Date endDate;
+
     public Lodge() {
-        this(null, "", 0.0f);
+        this(null, null, "", "", "");
     }
 
-    public Lodge(Date date, String location, float duration) {
-        super(date, location, "lodge", duration);
+    public Lodge(Date startDate, Date endDate, String location, String time, String info) {
+        super(startDate, location, "Lodging", time, info);
+        this.endDate = endDate;
+    }
+
+    public void setEndDate(Date date) {
+        this.endDate = date;
+    }
+
+    public Date getEndDate() {
+        return endDate;
     }
 }

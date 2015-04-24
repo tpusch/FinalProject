@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -69,6 +71,15 @@ public class EventListFrag extends Fragment implements AbsListView.OnItemClickLi
             trip = (Trip) getArguments().getSerializable("trip");
             if(trip.getEvents() != null) {
                 events = trip.getEvents();
+                /*
+                Collections.sort(events, new Comparator<Event>(){
+                    public int compare(Event o1, Event o2) {
+                        if (o1.getDate() == null || o2.getDate() == null)
+                            return 0;
+                        return o1.getDate().compareTo(o2.getDate());
+                    }
+                });
+                */
             }
         }
 

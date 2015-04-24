@@ -26,14 +26,6 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="See the other list"
-            android:id="@+id/button2"
-            android:layout_gravity="center_horizontal"
-            android:onClick="nextList" />
-
         <ListView
             android:layout_width="match_parent"
             android:layout_height="214dp"

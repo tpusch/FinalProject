@@ -1,5 +1,6 @@
 package com.example.mikeandtyler.travelapp;
 
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,9 +10,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 
@@ -27,13 +32,17 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trips);
-
-        tripListFrag = new TripListFrag();
-
         database = new CreateSequentialFile();
+    }
+
+    protected void onStart(){
+        super.onStart();
+
         database.openReadFile(this);
         trips = database.loadTrips();
         database.closeReadFile();
+
+        tripListFrag = new TripListFrag();
 
         Bundle args = new Bundle();
         args.putInt("size", trips.size());
@@ -41,23 +50,30 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
             args.putSerializable("trip"+i, trips.get(i));
         }
         tripListFrag.setArguments(args);
-
-        Log.d("size", String.valueOf(trips.size()));
         fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.TripLayout, tripListFrag, "TRIP_LIST");
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.TripLayout, tripListFrag, "TRIP_LIST");
+        //fragmentTransaction.addToBackStack("trip");
         fragmentTransaction.commit();
+    }
 
+
+    public void onBackPressed()
+    {
+        FragmentManager fm = this.getFragmentManager();
+        if(fm.getBackStackEntryCount() < 1) {
+            super.onBackPressed();
+        }
+        else {
+            fm.popBackStack();
+        }
     }
 
     @Override
     protected void onStop(){
         super.onStop();
-        database.openWriteFile(this);
-        for(int i = 0; i < trips.size(); i++){
-            database.saveTrip(trips.get(i));
-        }
-        database.closeWriteFile();
+
+
+
     }
 
     @Override
@@ -86,29 +102,50 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
         CreateTripFrag createTripFrag = new CreateTripFrag();
         fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.TripLayout, createTripFrag, "CREATE_TRIP");
-        fragmentTransaction.addToBackStack(null);
+        if(getFragmentManager().getBackStackEntryCount() == 0) {
+            fragmentTransaction.addToBackStack("tripList");
+        }
         fragmentTransaction.commit();
     }
 
     public void submitTrip(View view){
         EditText editText = (EditText) findViewById(R.id.editText);
-        Trip trip = new Trip(null, null, null, editText.getText().toString());
+        DatePicker startDatePicker = (DatePicker) findViewById(R.id.startDatePicker);
+        DatePicker endDatePicker = (DatePicker) findViewById(R.id.endDatePicker);
+
+        Date startDate = CreateSequentialFile.getDateFromDatePicker(startDatePicker);
+        Date endDate = CreateSequentialFile.getDateFromDatePicker(endDatePicker);
+
+        Trip trip = new Trip(null, startDate, endDate, editText.getText().toString());
+
         trips.add(trip);
+
+        Collections.sort(trips, new Comparator<Trip>() {
+            public int compare(Trip o1, Trip o2) {
+                if (o1.getStartDate() == null || o2.getStartDate() == null)
+                    return 0;
+                return o1.getStartDate().compareTo(o2.getStartDate());
+            }
+        });
+
+        database.openWriteFile(this);
+        for(int i = 0; i < trips.size(); i++){
+            database.saveTrip(trips.get(i));
+        }
+        database.closeWriteFile();
+
         Bundle args = new Bundle();
         args.putInt("size", trips.size());
         for(int i = 0; i < trips.size(); i++){
             args.putSerializable("trip"+i, trips.get(i));
         }
+        tripListFrag = new TripListFrag();
         tripListFrag.setArguments(args);
         fragmentTransaction = getFragmentManager().beginTransaction();
 
         fragmentTransaction.replace(R.id.TripLayout, tripListFrag, "TRIP_LIST");
-        fragmentTransaction.addToBackStack(null);
+        getFragmentManager().popBackStack();
         fragmentTransaction.commit();
-    }
-
-    public void nextList(View view){
-
     }
 
     public void onFragmentInteraction(Uri uri){

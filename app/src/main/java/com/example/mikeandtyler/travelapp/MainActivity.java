@@ -18,6 +18,15 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        CreateSequentialFile db = new CreateSequentialFile();
+        if(!db.openReadFile(this)){
+            db.openWriteFile(this);
+            db.closeWriteFile();
+        }else{
+            db.closeReadFile();
+        }
+
     }
 
 

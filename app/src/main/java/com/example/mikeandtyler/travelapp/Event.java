@@ -9,18 +9,19 @@ import java.util.Date;
 public abstract class Event implements Serializable {
 
     private Date date;
-    private String location, type;
-    private float duration;
+
+    private String location, type, info, time;
 
     public Event() {
-        this(null, "", "", 0.0f);
+        this(null, "", "", "", "");
     }
 
-    public Event(Date date, String location, String type, float duration) {
+    public Event(Date date, String location, String type, String time, String info) {
         this.date = date;
         this.location = location;
         this.type = type;
-        this.duration = duration;
+        this.time = time;
+        this.info = info;
     }
 
     public void setDate(Date date) {
@@ -35,8 +36,12 @@ public abstract class Event implements Serializable {
         this.type = type;
     }
 
-    public void setDuration(float duration) {
-        this.duration = duration;
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public Date getDate() {
@@ -51,12 +56,23 @@ public abstract class Event implements Serializable {
         return type;
     }
 
-    public float getDuration() {
-        return duration;
+    public String getTime() {
+        return time;
     }
+
+    public String getInfo() {
+        return info;
+    }
+
+//    @Override
+//    public int compareTo(Event event) {
+//        if (getDate() == null || event.getDate() == null)
+//            return 0;
+//        return getDate().compareTo(event.getDate());
+//    }
 
     @Override
     public String toString() {
-        return date.toString();
+        return ""+location+"  "+date.toString().substring(0,10);
     }
 }

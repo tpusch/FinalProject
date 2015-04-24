@@ -10,11 +10,11 @@ public class Flight extends Travel{
     private int flightNumber;
 
     public Flight() {
-        this(null, "", "", 0.0f, 0);
+        this(null, "", "", "", 0, "");
     }
 
-    public Flight(Date date, String fromCity, String toCity, float duration, int flightNumber) {
-        super(date, fromCity, toCity, duration, "flight");
+    public Flight(Date date, String fromCity, String toCity, String time, int flightNumber, String info) {
+        super(date, fromCity, toCity, time, "Flight", info);
         this.flightNumber = flightNumber;
     }
 

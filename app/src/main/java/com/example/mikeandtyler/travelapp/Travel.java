@@ -10,11 +10,11 @@ public abstract class Travel extends Event{
     private String toCity, travelType;
 
     public Travel() {
-        this(null, "", "", 0.0f, "");
+        this(null, "", "", "", "", "");
     }
 
-    public Travel(Date date, String fromCity, String toCity, float duration, String travelType) {
-        super(date, fromCity, "travel", duration);
+    public Travel(Date date, String fromCity, String toCity, String time, String travelType, String info) {
+        super(date, fromCity, "Travel", time, info);
         this.toCity = toCity;
         this.travelType = travelType;
     }

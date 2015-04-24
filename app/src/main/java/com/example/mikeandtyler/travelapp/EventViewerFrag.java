@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ public class EventViewerFrag extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    TextView nameText, typeText, locationText, dateText, durationText;
+    TextView nameText, typeText, locationText, dateText, durationText, infoText, endDateText;
 
     // TODO: Rename and change types of parameters
     Event event;
@@ -70,12 +71,35 @@ public class EventViewerFrag extends Fragment {
         locationText = (TextView) view.findViewById(R.id.locationText);
         dateText = (TextView) view.findViewById(R.id.dateText);
         durationText = (TextView) view.findViewById(R.id.durationText);
+        infoText = (TextView) view.findViewById(R.id.infoText);
+        endDateText = (TextView) view.findViewById(R.id.endDateText);
+
 
         nameText.setText(event.toString());
         typeText.setText(event.getType());
         locationText.setText(event.getLocation());
-        dateText.setText(event.getDate().toString());
-        durationText.setText(String.valueOf(event.getDuration()));
+        dateText.setText(event.getDate().toString().substring(0,10));
+        durationText.setText(String.valueOf(event.getTime()));
+        infoText.setText(event.getInfo());
+
+
+        String eventType = event.getType();
+        //Event Variations
+        if(eventType.equals("Lodging")){
+            dateText.setText("Check In: " + event.getDate().toString().substring(0,10));
+            endDateText.setVisibility(View.VISIBLE);
+            endDateText.setText("Check Out: " + ((Lodge) event).getEndDate().toString().substring(0,10) );
+            durationText.setVisibility(View.GONE);
+        }else if(eventType.equals("Flight")){
+            endDateText.setVisibility(View.VISIBLE);
+            endDateText.setText("Arrival: " );
+        }else if(event.equals("Car")){
+
+        }else if(event.equals("Train")){
+
+        }
+
+
         return view;
     }
 

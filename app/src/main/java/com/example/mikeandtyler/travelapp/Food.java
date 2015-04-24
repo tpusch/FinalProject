@@ -8,10 +8,10 @@ import java.util.Date;
 public class Food extends Event{
 
     public Food() {
-        this(null, "", 0.0f);
+        this(null, "", "", "");
     }
 
-    public Food(Date date, String location, float duration) {
-        super(date, location, "food", duration);
+    public Food(Date date, String location, String time, String info) {
+        super(date, location, "Dining", time, info);
     }
 }

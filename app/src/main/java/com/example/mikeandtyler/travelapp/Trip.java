@@ -4,25 +4,34 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by XMZALA on 4/16/15.
  */
 public class Trip implements Serializable{
 
-    private List<Event> events = new ArrayList<>();
+    private List<Event> events;
     private Date startDate, endDate;
-    private String location;
+    private String name;
+    private UUID id;
 
     public Trip() {
         this(null, null, null, "");
+        this.id = UUID.randomUUID();
     }
 
-    public Trip(List<Event> events, Date startDate, Date endDate, String location) {
-        this.events = events;
+    public Trip(List<Event> events, Date startDate, Date endDate, String name) {
+        if(events == null) {
+            this.events = new ArrayList();
+        }
+        else {
+            this.events = events;
+        }
         this.startDate = startDate;
         this.endDate = endDate;
-        this.location = location;
+        this.name = name;
+        this.id = UUID.randomUUID();
     }
 
     public void setStartDate(Date startDate) {
@@ -41,8 +50,8 @@ public class Trip implements Serializable{
         events.remove(event);
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Event> getEvents() {
@@ -57,12 +66,19 @@ public class Trip implements Serializable{
         return endDate;
     }
 
-    public String getLocation() {
-        return location;
+    public String getName() {
+        return name;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     @Override
     public String toString() {
-        return location;
+        String stringDate = startDate.toString();
+        String eDate = endDate.toString();
+        return name + " : " + stringDate.substring(0,10) + "," + stringDate.substring(stringDate.length()-5, stringDate.length())+
+                " - " + eDate.substring(0,10) + "," + eDate.substring(eDate.length()-5, eDate.length());
     }
 }
