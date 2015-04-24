@@ -24,7 +24,7 @@ public class EventViewerFrag extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    TextView nameText, typeText, locationText, dateText, durationText, infoText, endDateText;
+    TextView nameText, typeText, locationText, dateText, timeText, infoText, endDateText, travelText, destText;
 
     // TODO: Rename and change types of parameters
     Event event;
@@ -70,33 +70,52 @@ public class EventViewerFrag extends Fragment {
         typeText = (TextView) view.findViewById(R.id.typeText);
         locationText = (TextView) view.findViewById(R.id.locationText);
         dateText = (TextView) view.findViewById(R.id.dateText);
-        durationText = (TextView) view.findViewById(R.id.durationText);
+        timeText = (TextView) view.findViewById(R.id.durationText);
         infoText = (TextView) view.findViewById(R.id.infoText);
         endDateText = (TextView) view.findViewById(R.id.endDateText);
+        travelText = (TextView) view.findViewById(R.id.travelNumberText);
+        destText = (TextView) view.findViewById(R.id.destinationText);
 
-
-        nameText.setText(event.toString());
+        nameText.setText(event.getType() +" "+ event.getLocation());
         typeText.setText(event.getType());
         locationText.setText(event.getLocation());
         dateText.setText(event.getDate().toString().substring(0,10));
-        durationText.setText(String.valueOf(event.getTime()));
+        //timeText.setText(String.valueOf(event.getTime()));
         infoText.setText(event.getInfo());
 
 
         String eventType = event.getType();
         //Event Variations
         if(eventType.equals("Lodging")){
-            dateText.setText("Check In: " + event.getDate().toString().substring(0,10));
+            dateText.setText("Check In Date: " + event.getDate().toString().substring(0,10));
             endDateText.setVisibility(View.VISIBLE);
-            endDateText.setText("Check Out: " + ((Lodge) event).getEndDate().toString().substring(0,10) );
-            durationText.setVisibility(View.GONE);
-        }else if(eventType.equals("Flight")){
-            endDateText.setVisibility(View.VISIBLE);
-            endDateText.setText("Arrival: " );
-        }else if(event.equals("Car")){
+            endDateText.setText("Check Out Date: " + ((Lodge) event).getEndDate().toString().substring(0,10) );
+            timeText.setText("Check In Time: " + event.getTime());
+        }else if(eventType.equals("Leisure")) {
+            dateText.setText("Event Date: " + event.getDate().toString().substring(0,10));
+            timeText.setText("Event time: " + event.getTime());
+        }else if(eventType.equals("Travel")) {
+            String travelType = ((Travel) event).getTravelType();
+            typeText.setText("Travel - " + travelType);
+            dateText.setText("Departure Date: " + event.getDate().toString().substring(0,10));
+            timeText.setText("Departure time: " + event.getTime());
+            destText.setVisibility(View.VISIBLE);
+            locationText.setText("From: " + event.getLocation());
+            destText.setText("To: " + ((Travel) event).getToCity());
 
-        }else if(event.equals("Train")){
+            if (travelType.equals("Flight")) {
+                travelText.setVisibility(View.VISIBLE);
+                travelText.setText("Flight Number: " + ((Flight) event).getFlightNumber());
 
+            } else if (travelType.equals("Car")) {
+
+            } else if (travelType.equals("Train")) {
+                travelText.setVisibility(View.VISIBLE);
+                travelText.setText("Train Number: " + ((Train) event).getTrainNumber());
+            }
+        }else if(eventType.equals("Dining")){
+            dateText.setText("Reservation date: " + event.getDate().toString().substring(0,10));
+            timeText.setText("Reservation time: " + event.getTime());
         }
 
 

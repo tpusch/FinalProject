@@ -7,22 +7,22 @@ import java.util.Date;
  */
 public class Train extends Travel{
 
-    private int trainNumber;
+    private String trainNumber;
 
     public Train() {
-        this(null, "", "", "", 0, "");
+        this(null, "", "", "", "", "");
     }
 
-    public Train(Date date, String fromCity, String toCity, String time, int trainNumber, String info) {
+    public Train(Date date, String fromCity, String toCity, String time, String trainNumber, String info) {
         super(date, fromCity, toCity, time, "Train", info);
         this.trainNumber = trainNumber;
     }
 
-    public void setTrainNumber(int trainNumber) {
+    public void setTrainNumber(String trainNumber) {
         this.trainNumber = trainNumber;
     }
 
-    public int getTrainNumber() {
+    public String getTrainNumber() {
         return trainNumber;
     }
 }

@@ -99,6 +99,7 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
 
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        Spinner travelSpinner = (Spinner) findViewById(R.id.travelSpinner);
         EditText locationEdit = (EditText) findViewById(R.id.locationText);
         String location = locationEdit.getText().toString();
 
@@ -114,19 +115,28 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         if (spinner.getSelectedItem().toString().equals("Dining")) {
             event = new Food(date, location, time, info);
         } else if (spinner.getSelectedItem().toString().equals("Lodging")) {
-            event = new Lodge(date, date, location, time, info);
+            DatePicker endDatePicker = (DatePicker) findViewById(R.id.endPicker);
+            Date endDate = CreateSequentialFile.getDateFromDatePicker(endDatePicker);
+
+            event = new Lodge(date, endDate, location, time, info);
 
         } else if (spinner.getSelectedItem().toString().equals("Leisure")) {
             event = new Fun(date, location, time, info);
 
-        } else if (spinner.getSelectedItem().toString().equals("Travel")) {
-            if(spinner.getSelectedItem().toString().equals("Train")){
+        } else{
+            EditText destinationEdit = (EditText) findViewById(R.id.endLocation);
+            String destination = destinationEdit.getText().toString();
 
+            EditText numberEdit = (EditText) findViewById(R.id.travelNumber);
+            String travelNumber = numberEdit.getText().toString();
+
+            if(travelSpinner.getSelectedItem().toString().equals("Train")){
+                event = new Train(date, location, destination, time, travelNumber, info);
+            }else if(travelSpinner.getSelectedItem().toString().equals("Flight")){
+                event = new Flight(date, location, destination, time, travelNumber, info);
+            }else/*car*/{
+                event = new Car(date, location, destination, time, info);
             }
-            event = new Train(date, "Train", "now", "dumb", 5, "this trip rocks");
-
-        } else {
-            event = new Train();
         }
 
         if(newEvent){
@@ -209,15 +219,68 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
     public void onFragmentInteraction(String eventType){
 
         DatePicker datePicker = (DatePicker) findViewById(R.id.endPicker);
-        TextView textView = (TextView) findViewById(R.id.endDatePickerText);
+        TextView endDatePicker = (TextView) findViewById(R.id.endDatePickerText);
+        TextView startDatePicker = (TextView) findViewById(R.id.startDatePickerText);
+        TextView startTime = (TextView) findViewById(R.id.setStartTime);
         Spinner travelSpinner = (Spinner) findViewById(R.id.travelSpinner);
+        EditText endLocation = (EditText) findViewById(R.id.endLocation);
+        EditText number = (EditText) findViewById(R.id.travelNumber);
 
-        travelSpinner.setVisibility(View.GONE);
+
+        //
         if(eventType.equals("Lodging")){
             datePicker.setVisibility(View.VISIBLE);
-            textView.setVisibility(View.VISIBLE);
+            endDatePicker.setVisibility(View.VISIBLE);
+            travelSpinner.setVisibility(View.GONE);
+            endLocation.setVisibility(View.GONE);
+            number.setVisibility(View.GONE);
+            startDatePicker.setText("Check-In Date");
+            endDatePicker.setText("Check-Out Date");
+            startTime.setText("Check-In Time");
         }else if(eventType.equals("Travel")){
             travelSpinner.setVisibility(View.VISIBLE);
+            datePicker.setVisibility(View.GONE);
+            endDatePicker.setVisibility(View.GONE);
+            endLocation.setVisibility(View.VISIBLE);
+            startDatePicker.setText("Departure Date");
+            startTime.setText("Departure Time");
+            number.setVisibility(View.VISIBLE);
+        }else if(eventType.equals("Dining")){
+            travelSpinner.setVisibility(View.GONE);
+            endDatePicker.setVisibility(View.GONE);
+            datePicker.setVisibility(View.GONE);
+            endLocation.setVisibility(View.GONE);
+            number.setVisibility(View.GONE);
+            startDatePicker.setText("Reservation Date");
+            startTime.setText("Reservation Time");
+        }else if(eventType.equals("Leisure")){
+            travelSpinner.setVisibility(View.GONE);
+            endDatePicker.setVisibility(View.GONE);
+            datePicker.setVisibility(View.GONE);
+            endLocation.setVisibility(View.GONE);
+            number.setVisibility(View.GONE);
+            startDatePicker.setText("Event Date");
+            startTime.setText("Event Time");
+
+        }
+
+    }
+
+
+
+    public void onTravelSpinnerInteraction(String eventType){
+
+        EditText number = (EditText) findViewById(R.id.travelNumber);
+
+        if(eventType.equals("Train")){
+            number.setVisibility(View.VISIBLE);
+            number.setHint("Train Number");
+        }else if(eventType.equals("Flight")){
+            number.setVisibility(View.VISIBLE);
+            number.setHint("Flight Number");
+
+        }else if(eventType.equals("Car")){
+            number.setVisibility(View.GONE);
         }
     }
 

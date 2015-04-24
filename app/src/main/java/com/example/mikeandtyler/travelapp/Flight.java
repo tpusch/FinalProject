@@ -7,22 +7,22 @@ import java.util.Date;
  */
 public class Flight extends Travel{
 
-    private int flightNumber;
+    private String flightNumber;
 
     public Flight() {
-        this(null, "", "", "", 0, "");
+        this(null, "", "", "", "", "");
     }
 
-    public Flight(Date date, String fromCity, String toCity, String time, int flightNumber, String info) {
+    public Flight(Date date, String fromCity, String toCity, String time, String flightNumber, String info) {
         super(date, fromCity, toCity, time, "Flight", info);
         this.flightNumber = flightNumber;
     }
 
-    public void setFlightNumber(int flightNumber) {
+    public void setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
     }
 
-    public int getFlightNumber() {
+    public String getFlightNumber() {
         return flightNumber;
     }
 }

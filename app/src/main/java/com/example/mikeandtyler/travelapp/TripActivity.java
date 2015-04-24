@@ -42,6 +42,14 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
         trips = database.loadTrips();
         database.closeReadFile();
 
+        Collections.sort(trips, new Comparator<Trip>() {
+            public int compare(Trip o1, Trip o2) {
+                if (o1.getStartDate() == null || o2.getStartDate() == null)
+                    return 0;
+                return o1.getStartDate().compareTo(o2.getStartDate());
+            }
+        });
+
         tripListFrag = new TripListFrag();
 
         Bundle args = new Bundle();
@@ -156,5 +164,17 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
         Intent i = new Intent(this, EventActivity.class);
         i.putExtra("trip", trip);
         startActivity(i);
+    }
+
+    public void removeTrip(Trip trip){
+        trips.remove(trip);
+
+        database.openWriteFile(this);
+        for(int i = 0; i < trips.size(); i++){
+            database.saveTrip(trips.get(i));
+        }
+        database.closeWriteFile();
+
+        //refresh the array adapter or w/e
     }
 }

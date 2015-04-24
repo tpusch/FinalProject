@@ -12,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,24 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedState){
+        super.onActivityCreated(savedState);
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                //should give an alert option
+                Toast.makeText(getActivity(), "this is a delete", Toast.LENGTH_LONG).show();
+
+                mListener.removeTrip((Trip) parent.getItemAtPosition(position));
+                trips.remove(parent.getItemAtPosition(position));
+                mAdapter.notifyDataSetChanged();
+
+                return true;
+            }
+        });
+    }
+
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -124,6 +143,7 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onTripFragmentInteraction(Trip trip);
+        public void removeTrip(Trip trip);
     }
 
 }

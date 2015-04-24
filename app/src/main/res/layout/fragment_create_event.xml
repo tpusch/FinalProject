@@ -53,11 +53,19 @@
                 android:layout_gravity="center_horizontal"
                 android:hint="Set Location" />
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/endLocation"
+                android:layout_gravity="center_horizontal"
+                android:hint="Destination"
+                android:visibility="gone"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Set Start Date"
-                android:id="@+id/textView6"
+                android:id="@+id/startDatePickerText"
                 android:layout_gravity="center_horizontal" />
 
             <DatePicker
@@ -89,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Set Start Time"
-                android:id="@+id/textView7"
+                android:id="@+id/setStartTime"
                 android:layout_gravity="center_horizontal" />
 
             <TimePicker
@@ -102,9 +110,17 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/travelNumber"
+                android:layout_gravity="center_horizontal"
+                android:hint="Flight Number"
+                android:visibility="gone"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/infoText"
                 android:layout_gravity="center_horizontal"
-                android:hint="Information about Event" />
+                android:hint="Additional Information" />
 
             <Button
                 android:layout_width="wrap_content"

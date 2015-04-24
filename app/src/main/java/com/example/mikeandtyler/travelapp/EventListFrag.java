@@ -71,7 +71,7 @@ public class EventListFrag extends Fragment implements AbsListView.OnItemClickLi
             trip = (Trip) getArguments().getSerializable("trip");
             if(trip.getEvents() != null) {
                 events = trip.getEvents();
-                /*
+
                 Collections.sort(events, new Comparator<Event>(){
                     public int compare(Event o1, Event o2) {
                         if (o1.getDate() == null || o2.getDate() == null)
@@ -79,7 +79,7 @@ public class EventListFrag extends Fragment implements AbsListView.OnItemClickLi
                         return o1.getDate().compareTo(o2.getDate());
                     }
                 });
-                */
+
             }
         }
 
