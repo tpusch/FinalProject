@@ -7,6 +7,29 @@
     <string name="title_activity_trip_list">TripList</string>
     <string name="title_activity_itinerary_list">ItineraryList</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mainText">Super Duper Travel Bros</string>
+    <string name="go">Go</string>
+    <string name="tripListText">Trips</string>
+    <string name="newTrip">New Trip</string>
+    <string name="tripHint">Name your Trip!</string>
+    <string name="tripStart">Start Date</string>
+    <string name="tripCreateTitle">Create Trip</string>
+    <string name="tripEnd">End Date</string>
+    <string name="submitTrip">Submit</string>
+    <string name="createEventTitle">Create Event</string>
+    <string name="setLocation">Set Location</string>
+    <string name="setDestination">Destination</string>
+    <string name="setStartTime">Start Time</string>
+    <string name="flightNumber">Flight Number</string>
+    <string name="newEvent">New Event</string>
+    <string name="itinerary">Itinerary</string>
+    <string name="type">Type</string>
+    <string name="location">Location</string>
+    <string name="name">Event Name</string>
+    <string name="time">Time</string>
+    <string name="travelNumber">Travel Number</string>
+    <string name="info">Info</string>
+    <string name="edit">Edit</string>
 
     <string-array name="eventTypes">
         <item>Dining</item>

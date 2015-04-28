@@ -33,6 +33,7 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
     private String mParam2;
     Spinner eventSpinner, travelSpinner;
     Boolean newEvent;
+    Event event;
 
     ArrayAdapter<CharSequence> adapter, adapter1;
     private OnFragmentInteractionListener mListener;
@@ -62,8 +63,13 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        newEvent = true;
+        //loading based on if we are editing an event or creating a new one
         if (getArguments() != null) {
-            newEvent = getArguments().getBoolean("newEvent");
+            newEvent = getArguments().getBoolean("newEvent",true);
+            if(!newEvent){
+                event = (Event) getArguments().getSerializable("event");
+            }
         }
     }
 
@@ -72,6 +78,8 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
+
+        //create event and travel spinners for use in our fragment
 
         eventSpinner = (Spinner) view.findViewById(R.id.spinner);
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.eventTypes, android.R.layout.simple_spinner_dropdown_item);
@@ -86,20 +94,23 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             //mListener.onFragmentInteraction(eventSpinner.getSelectedItem().toString());
         }
     }
 
+    //mandatory nothing selected from spinner
     public void onNothingSelected(AdapterView<?> parent) {
         
     }
 
+    //listener for spinner dropdown selections
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        //spinner selection is event spinner: notify activity
         if(parent.getAdapter().equals(adapter)){
             mListener.onFragmentInteraction(parent.getSelectedItem().toString());
+        //spinner selection is travel spinner: notify activity
         }else if(parent.getAdapter().equals(adapter1)){
             mListener.onTravelSpinnerInteraction(parent.getSelectedItem().toString());
         }
@@ -116,6 +127,13 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
         }
     }
 
+    public void onStart(){
+        super.onStart();
+        //Call for activity to populate fields if we are editing an existing event
+        if(!newEvent){
+            mListener.loadEventItems();
+        }
+    }
     @Override
     public void onDetach() {
         super.onDetach();
@@ -133,9 +151,12 @@ public class CreateEventFrag extends Fragment implements AdapterView.OnItemSelec
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+        //Event spinner dropdown interaction
         public void onFragmentInteraction(String event);
+        //Travel spinner dropdown interaction
         public void onTravelSpinnerInteraction(String event);
+        //Helper function for activity to populate existing fields
+        public void loadEventItems();
     }
 
 }

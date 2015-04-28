@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -38,24 +39,20 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
 
+        eventViewerFrag = new EventViewerFrag();
+        createEventFrag = new CreateEventFrag();
+
+        //immediately start the Event List frag to display our events
         eventListFrag = new EventListFrag();
         trip = (Trip) getIntent().getSerializableExtra("trip");
         Bundle args = new Bundle();
         args.putSerializable("trip", trip);
         eventListFrag.setArguments(args);
-        eventViewerFrag = new EventViewerFrag();
-        createEventFrag = new CreateEventFrag();
 
         fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.EventLayout, eventListFrag, "LIST_EVENT");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-
     }
 
     @Override
@@ -80,20 +77,19 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         return super.onOptionsItemSelected(item);
     }
 
+    //handles the back button through fragments or to previous activity
     public void onBackPressed()
     {
         FragmentManager fm = this.getFragmentManager();
         if(fm.getBackStackEntryCount() == 1) {
             super.onBackPressed();
-            Log.d("EventActivity", "superback");
         }
         else {
             fm.popBackStack();
-            Log.d("Event Activity", "pop back stack");
         }
     }
 
-
+    //onClick function: Submit from CreateEventFrag
     public void submitEvent(View view){
         Event event;
 
@@ -107,7 +103,15 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         Date date = CreateSequentialFile.getDateFromDatePicker(datePicker);
 
         TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
-        String time = timePicker.getCurrentHour().toString() +":" + timePicker.getCurrentMinute().toString();
+        date.setHours(timePicker.getCurrentHour());
+        date.setMinutes(timePicker.getCurrentMinute());
+        String time;
+        if (timePicker.getCurrentMinute() < 10) {
+            time = timePicker.getCurrentHour().toString() + ":0" + timePicker.getCurrentMinute().toString();
+        }
+        else{
+            time = timePicker.getCurrentHour().toString() + ":" + timePicker.getCurrentMinute().toString();
+        }
 
         EditText infoEdit = (EditText) findViewById(R.id.infoText);
         String info = infoEdit.getText().toString();
@@ -151,6 +155,7 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         args.putSerializable("trip", trip);
         eventListFrag.setArguments(args);
 
+        //Saves new events to prevent data loss on crash
         CreateSequentialFile db = new CreateSequentialFile();
         db.openReadFile(this);
         List<Trip> trips;
@@ -178,6 +183,7 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         fragmentTransaction.commit();
     }
 
+    //onClick function: New Event from EventListFrag
     public void newEvent(View view){
         fragmentTransaction = getFragmentManager().beginTransaction();
         createEventFrag = new CreateEventFrag();
@@ -189,20 +195,21 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         fragmentTransaction.commit();
     }
 
+    //onClick function: Edit Event from EventViewerFrag
     public void editEvent(View view){
         fragmentTransaction = getFragmentManager().beginTransaction();
         createEventFrag = new CreateEventFrag();
         Bundle args = new Bundle();
         newEvent = false;
-        //something something on fragment interaction
-        //args.putSerializable("event", event);
-
+        args.putBoolean("newEvent", newEvent);
+        createEventFrag.setArguments(args);
         fragmentTransaction.replace(R.id.EventLayout, createEventFrag, "CREATE_EVENT");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
-
+    //Fragment Interaction from EventListFrag
+    //Views the selected event from the event list
     public void onFragmentInteraction(Event event){
         currentEvent = event;
         Bundle args = new Bundle();
@@ -216,6 +223,8 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         fragmentTransaction.commit();
     }
 
+    //Fragment Interaction from CreateEventFrag
+    //Dynamically populates the CreateEventFrag based on the selected event drop-down item
     public void onFragmentInteraction(String eventType){
 
         DatePicker datePicker = (DatePicker) findViewById(R.id.endPicker);
@@ -227,7 +236,7 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         EditText number = (EditText) findViewById(R.id.travelNumber);
 
 
-        //
+        //series displaying and populating fields based on the events type
         if(eventType.equals("Lodging")){
             datePicker.setVisibility(View.VISIBLE);
             endDatePicker.setVisibility(View.VISIBLE);
@@ -267,7 +276,8 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
     }
 
 
-
+    //FragmentInteraction from CreateEventFrag
+    //Further dynamic population based on the second dropdown travel spinner
     public void onTravelSpinnerInteraction(String eventType){
 
         EditText number = (EditText) findViewById(R.id.travelNumber);
@@ -284,5 +294,82 @@ public class EventActivity extends FragmentActivity implements EventViewerFrag.O
         }
     }
 
+    public void removeEvent(Event event) {
+        trip.removeEvent(event);
+
+        //Saves our most recent changes
+        CreateSequentialFile db = new CreateSequentialFile();
+        db.openReadFile(this);
+        List<Trip> trips;
+        trips = db.loadTrips();
+        db.closeReadFile();
+        for(Trip t : trips){
+            if (t.getId().equals(trip.getId())){
+                Log.d("event saving", "in the if");
+                trips.remove(t);
+                trips.add(trip);
+                break;
+            }
+        }
+        db.openWriteFile(this);
+        for(int i = 0; i < trips.size(); i++){
+            db.saveTrip(trips.get(i));
+        }
+        db.closeWriteFile();
+    }
+
+    //Fragment Interaction from CreateEventFrag
+    //Populates all fields based on the current event when editing an existing event
+    public void loadEventItems(){
+        DatePicker startDatePicker = (DatePicker) findViewById(R.id.datePicker);
+        DatePicker endDatePicker = (DatePicker) findViewById(R.id.endPicker);
+        Spinner travelSpinner = (Spinner) findViewById(R.id.travelSpinner);
+        Spinner eventSpinner = (Spinner) findViewById(R.id.spinner);
+        EditText endLocation = (EditText) findViewById(R.id.endLocation);
+        EditText number = (EditText) findViewById(R.id.travelNumber);
+        EditText location = (EditText) findViewById(R.id.locationText);
+        EditText info = (EditText) findViewById(R.id.infoText);
+        TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(currentEvent.getDate());
+        startDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+
+        info.setText(currentEvent.getInfo());
+        location.setText(currentEvent.getLocation());
+
+        String[] timeArray = currentEvent.getTime().split(":");
+        timePicker.setCurrentMinute(Integer.parseInt(timeArray[1]));
+        timePicker.setCurrentHour(Integer.parseInt(timeArray[0]));
+
+
+        String eventType = currentEvent.getType();
+        if(eventType.equals("Dining")){
+            eventSpinner.setSelection(0);
+
+        }else if(eventType.equals("Leisure")){
+            eventSpinner.setSelection(1);
+        }else if(eventType.equals("Lodging")){
+            eventSpinner.setSelection(2);
+            Date d = ((Lodge)currentEvent).getEndDate();
+            cal.setTime(d);
+            endDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        }else if(eventType.equals("Travel")){
+            eventSpinner.setSelection(3);
+            String travelType = ((Travel) currentEvent).getTravelType();
+            endLocation.setText(((Travel) currentEvent).getToCity());
+            if(travelType.equals("Flight")){
+                travelSpinner.setSelection(0);
+                number.setText(((Flight)currentEvent).getFlightNumber());
+            }else if(travelType.equals("Train")){
+                travelSpinner.setSelection(1);
+                number.setText(((Train)currentEvent).getTrainNumber());
+            }else if(travelType.equals("Car")){
+                travelSpinner.setSelection(2);
+            }
+        }
+    }
+
+    //unused fragment interaction
     public void onFragmentInteraction(Uri uri){}
 }

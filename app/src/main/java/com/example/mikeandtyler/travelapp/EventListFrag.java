@@ -1,6 +1,8 @@
 package com.example.mikeandtyler.travelapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +41,7 @@ public class EventListFrag extends Fragment implements AbsListView.OnItemClickLi
 
     private ArrayAdapter mAdapter;
     private AbsListView mListView;
+    AlertDialog alertDialog;
 
     private OnFragmentInteractionListener mListener;
 
@@ -49,7 +53,6 @@ public class EventListFrag extends Fragment implements AbsListView.OnItemClickLi
      * @param param2 Parameter 2.
      * @return A new instance of fragment EventListFrag.
      */
-    // TODO: Rename and change types and number of parameters
     public static EventListFrag newInstance(String param1, String param2) {
         EventListFrag fragment = new EventListFrag();
         Bundle args = new Bundle();
@@ -69,7 +72,7 @@ public class EventListFrag extends Fragment implements AbsListView.OnItemClickLi
         events = new ArrayList<>();
         if (getArguments() != null) {
             trip = (Trip) getArguments().getSerializable("trip");
-            if(trip.getEvents() != null) {
+            if(trip.getEvents() != null && trip.getEvents().size() > 0) {
                 events = trip.getEvents();
 
                 Collections.sort(events, new Comparator<Event>(){
@@ -77,6 +80,7 @@ public class EventListFrag extends Fragment implements AbsListView.OnItemClickLi
                         if (o1.getDate() == null || o2.getDate() == null)
                             return 0;
                         return o1.getDate().compareTo(o2.getDate());
+
                     }
                 });
 
@@ -99,13 +103,38 @@ public class EventListFrag extends Fragment implements AbsListView.OnItemClickLi
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
+    @Override
+    public void onActivityCreated(Bundle savedState){
+        super.onActivityCreated(savedState);
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
+                //Creates the alert dialog and buttons for a long click on an event
+                alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Delete");
+                alertDialog.setMessage("Would you like to delete this event?");
+                //yes button for deleting an event
+                alertDialog.setButton2("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        mListener.removeEvent((Event) parent.getItemAtPosition(position));
+                        //trip.removeEvent((Event) parent.getItemAtPosition(position));
+                        mAdapter.notifyDataSetChanged();
+                        Toast.makeText(getActivity(), "Event Removed", Toast.LENGTH_LONG).show();
+                    }
+                });
+                //No button for deleting an event
+                alertDialog.setButton("NO", new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int which){
 
+                    }
+                });
+                alertDialog.show();
+                return true;
+            }
+        });
+    }
+
+    //Listener for the selection of an event in our Event List
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mListener.onFragmentInteraction(events.get(position));
     }
@@ -138,8 +167,10 @@ public class EventListFrag extends Fragment implements AbsListView.OnItemClickLi
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+        //An event has been selected
         public void onFragmentInteraction(Event event);
+        //Long click has called an event to be deleted
+        public void removeEvent(Event event);
     }
 
 }

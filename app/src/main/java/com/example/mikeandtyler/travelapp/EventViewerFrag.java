@@ -57,14 +57,15 @@ public class EventViewerFrag extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            //pull out the event argument to be viewed
             event = (Event) getArguments().getSerializable("event");
         }
     }
 
+    //Populates all fields with event information
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_event_viewer, container, false);
         nameText = (TextView) view.findViewById(R.id.nameText);
         typeText = (TextView) view.findViewById(R.id.typeText);
@@ -76,22 +77,23 @@ public class EventViewerFrag extends Fragment {
         travelText = (TextView) view.findViewById(R.id.travelNumberText);
         destText = (TextView) view.findViewById(R.id.destinationText);
 
-        nameText.setText(event.getType() +" "+ event.getLocation());
+        nameText.setText("Event Details");
         typeText.setText(event.getType());
         locationText.setText(event.getLocation());
         dateText.setText(event.getDate().toString().substring(0,10));
-        //timeText.setText(String.valueOf(event.getTime()));
         infoText.setText(event.getInfo());
 
-
         String eventType = event.getType();
-        //Event Variations
+
+        //Dynamically populates specific fields based on event type
         if(eventType.equals("Lodging")){
             dateText.setText("Check In Date: " + event.getDate().toString().substring(0,10));
             endDateText.setVisibility(View.VISIBLE);
             endDateText.setText("Check Out Date: " + ((Lodge) event).getEndDate().toString().substring(0,10) );
             timeText.setText("Check In Time: " + event.getTime());
         }else if(eventType.equals("Leisure")) {
+            endDateText.setVisibility(View.GONE);
+            timeText.setVisibility(View.VISIBLE);
             dateText.setText("Event Date: " + event.getDate().toString().substring(0,10));
             timeText.setText("Event time: " + event.getTime());
         }else if(eventType.equals("Travel")) {
@@ -103,6 +105,7 @@ public class EventViewerFrag extends Fragment {
             locationText.setText("From: " + event.getLocation());
             destText.setText("To: " + ((Travel) event).getToCity());
 
+            //further populates based on specific subtypes
             if (travelType.equals("Flight")) {
                 travelText.setVisibility(View.VISIBLE);
                 travelText.setText("Flight Number: " + ((Flight) event).getFlightNumber());
@@ -118,11 +121,9 @@ public class EventViewerFrag extends Fragment {
             timeText.setText("Reservation time: " + event.getTime());
         }
 
-
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -157,7 +158,7 @@ public class EventViewerFrag extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+        //unused fragment interaction
         public void onFragmentInteraction(Uri uri);
     }
 

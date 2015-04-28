@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Create Event"
+        android:text="@string/createEventTitle"
         android:id="@+id/textView9"
         android:layout_gravity="center_horizontal" />
 
@@ -51,20 +51,20 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/locationText"
                 android:layout_gravity="center_horizontal"
-                android:hint="Set Location" />
+                android:hint="@string/setLocation" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/endLocation"
                 android:layout_gravity="center_horizontal"
-                android:hint="Destination"
+                android:hint="@string/setDestination"
                 android:visibility="gone"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Set Start Date"
+                android:text="@string/tripStart"
                 android:id="@+id/startDatePickerText"
                 android:layout_gravity="center_horizontal" />
 
@@ -79,7 +79,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Set End Date"
+                android:text="@string/tripEnd"
                 android:id="@+id/endDatePickerText"
                 android:layout_gravity="center_horizontal"
                 android:visibility="gone"/>
@@ -96,7 +96,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Set Start Time"
+                android:text="@string/setStartTime"
                 android:id="@+id/setStartTime"
                 android:layout_gravity="center_horizontal" />
 
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/travelNumber"
                 android:layout_gravity="center_horizontal"
-                android:hint="Flight Number"
+                android:hint="@string/flightNumber"
                 android:visibility="gone"/>
 
             <EditText
@@ -125,7 +125,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Submit"
+                android:text="@string/submitTrip"
                 android:id="@+id/button5"
                 android:layout_gravity="center_horizontal|bottom"
                 android:onClick="submitEvent" />

@@ -12,6 +12,6 @@ public class Fun extends Event{
     }
 
     public Fun(Date date, String location, String time, String info){
-        super(date, location, "Event", time, info);
+        super(date, location, "Leisure", time, info);
     }
 }

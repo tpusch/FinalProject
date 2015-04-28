@@ -1,6 +1,8 @@
 package com.example.mikeandtyler.travelapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -30,10 +32,11 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
 
     private ArrayAdapter mAdapter;
     private AbsListView mListView;
+    AlertDialog alertDialog;
 
     private OnFragmentInteractionListener mListener;
-    List<Trip> trips;
 
+    List<Trip> trips;
 
     /**
      * Use this factory method to create a new instance of
@@ -60,7 +63,7 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
         trips = new ArrayList<>();
         if (getArguments() != null) {
             int size = getArguments().getInt("size");
-            Log.d("size again", String.valueOf(size));
+            //Loads the trips into the trip list arraylist
             for(int i = 0; i < size; i++){
                 Trip trip = (Trip) getArguments().getSerializable("trip"+i);
                 trips.add(trip);
@@ -87,13 +90,39 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
         super.onActivityCreated(savedState);
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
                 //should give an alert option
-                Toast.makeText(getActivity(), "this is a delete", Toast.LENGTH_LONG).show();
 
-                mListener.removeTrip((Trip) parent.getItemAtPosition(position));
-                trips.remove(parent.getItemAtPosition(position));
-                mAdapter.notifyDataSetChanged();
+                //Building the long click alert dialog and buttons
+                alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Delete");
+                alertDialog.setMessage("Would you like to delete this trip?");
+                //Yes Button for deleting a trip
+                alertDialog.setButton2("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        mListener.removeTrip((Trip) parent.getItemAtPosition(position));
+                        trips.remove(parent.getItemAtPosition(position));
+                        mAdapter.notifyDataSetChanged();
+                        Toast.makeText(getActivity(), "Trip Removed", Toast.LENGTH_LONG).show();
+                    }
+                });
+                //No Button for deleting a trip
+                alertDialog.setButton("NO", new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int which){
+
+                    }
+                });
+                //Edit Button for editing a trip
+                alertDialog.setButton3("EDIT", new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int which){
+                        mListener.editTrip((Trip) parent.getItemAtPosition(position));
+                    }
+                });
+                alertDialog.show();
+
+//                mListener.removeTrip((Trip) parent.getItemAtPosition(position));
+//                trips.remove(parent.getItemAtPosition(position));
+//                mAdapter.notifyDataSetChanged();
 
                 return true;
             }
@@ -109,6 +138,7 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
         }
     }
 
+    //Item selected out of the trip list, sends that information to the activity
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mListener.onTripFragmentInteraction(trips.get(position));
     }
@@ -142,8 +172,12 @@ public class TripListFrag extends Fragment implements AbsListView.OnItemClickLis
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
+        //a trip has been selected out of the list
         public void onTripFragmentInteraction(Trip trip);
+        //long press has selected to delete a trip
         public void removeTrip(Trip trip);
+        //long press has selected to edit a trip
+        public void editTrip(Trip trip);
     }
 
 }

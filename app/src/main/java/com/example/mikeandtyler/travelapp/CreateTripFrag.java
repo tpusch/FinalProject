@@ -23,7 +23,7 @@ public class CreateTripFrag extends Fragment {
 
 
     EditText tripNameText;
-
+    Boolean newTrip;
 
 
 
@@ -52,7 +52,10 @@ public class CreateTripFrag extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        newTrip = true;
         if (getArguments() != null) {
+            //if we are editing an existing trip we are expecting false, otherwise it should always be true
+            newTrip = getArguments().getBoolean("newTrip", true);
         }
     }
 
@@ -83,8 +86,16 @@ public class CreateTripFrag extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
     }
 
+    public void onStart(){
+        super.onStart();
+        //if we are editing a trip, have the activity populate our fields
+        if(!newTrip){
+            mListener.fillTrip();
+        }
+    }
     @Override
     public void onDetach() {
         super.onDetach();
@@ -102,8 +113,10 @@ public class CreateTripFrag extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+        //Unused interaction function
         public void onFragmentInteraction(Uri uri);
+        //helper function to populate fragment with existing trip info
+        public void fillTrip();
     }
 
 }

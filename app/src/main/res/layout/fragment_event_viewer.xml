@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="This is the name of your event"
+            android:text="@string/name"
             android:id="@+id/nameText"
             android:layout_gravity="center_horizontal" />
 
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Type"
+            android:text="@string/type"
             android:id="@+id/typeText"
             android:layout_gravity="center_horizontal" />
 
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Location"
+            android:text="@string/location"
             android:id="@+id/locationText"
             android:layout_gravity="center_horizontal" />
 
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Destination"
+            android:text="@string/setDestination"
             android:id="@+id/destinationText"
             android:layout_gravity="center_horizontal"
             android:visibility="gone"/>
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Start Date"
+            android:text="@string/tripStart"
             android:id="@+id/dateText"
             android:layout_gravity="center_horizontal" />
 
@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="End Date"
+            android:text="@string/tripEnd"
             android:id="@+id/endDateText"
             android:layout_gravity="center_horizontal"
             android:visibility="gone" />
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Duration"
+            android:text="@string/time"
             android:id="@+id/durationText"
             android:layout_gravity="center_horizontal" />
 
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Info"
+            android:text="@string/travelNumber"
             android:id="@+id/travelNumberText"
             android:layout_gravity="center_horizontal"
             android:visibility="gone"/>
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Info"
+            android:text="@string/info"
             android:id="@+id/infoText"
             android:layout_gravity="center_horizontal" />
 
@@ -96,7 +96,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit"
+        android:text="@string/edit"
         android:id="@+id/editButton"
         android:layout_gravity="center_horizontal|bottom"
         android:onClick="editEvent" />

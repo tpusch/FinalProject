@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -26,6 +27,8 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
     TripListFrag tripListFrag;
 
     CreateSequentialFile database;
+    boolean newTrip;
+    Trip currentTrip;
     List<Trip> trips;
 
     @Override
@@ -57,14 +60,14 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
         for(int i = 0; i < trips.size(); i++){
             args.putSerializable("trip"+i, trips.get(i));
         }
+
         tripListFrag.setArguments(args);
         fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.TripLayout, tripListFrag, "TRIP_LIST");
-        //fragmentTransaction.addToBackStack("trip");
         fragmentTransaction.commit();
     }
 
-
+    //Back Button press handler, goes back through fragments, or to the previous activity
     public void onBackPressed()
     {
         FragmentManager fm = this.getFragmentManager();
@@ -74,14 +77,6 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
         else {
             fm.popBackStack();
         }
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-
-
-
     }
 
     @Override
@@ -106,8 +101,10 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
         return super.onOptionsItemSelected(item);
     }
 
+    //onClick function: create a new Trip from the Trip List
     public void newTrip(View view){
         CreateTripFrag createTripFrag = new CreateTripFrag();
+        newTrip = true;
         fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.TripLayout, createTripFrag, "CREATE_TRIP");
         if(getFragmentManager().getBackStackEntryCount() == 0) {
@@ -116,6 +113,7 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
         fragmentTransaction.commit();
     }
 
+    //onClick function: submit the trip from Create Trip Frag
     public void submitTrip(View view){
         EditText editText = (EditText) findViewById(R.id.editText);
         DatePicker startDatePicker = (DatePicker) findViewById(R.id.startDatePicker);
@@ -124,10 +122,19 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
         Date startDate = CreateSequentialFile.getDateFromDatePicker(startDatePicker);
         Date endDate = CreateSequentialFile.getDateFromDatePicker(endDatePicker);
 
-        Trip trip = new Trip(null, startDate, endDate, editText.getText().toString());
+        //If we are creating a new trip from scratch
+        if(newTrip){
 
-        trips.add(trip);
+            Trip trip = new Trip(null, startDate, endDate, editText.getText().toString());
+            trips.add(trip);
+        //If we are editing an existing trip
+        }else{
+            trips.remove(currentTrip);
+            Trip trip = new Trip(currentTrip.getEvents(), startDate, endDate, editText.getText().toString());
+            trips.add(trip);
+        }
 
+        //Reset the trips by date
         Collections.sort(trips, new Comparator<Trip>() {
             public int compare(Trip o1, Trip o2) {
                 if (o1.getStartDate() == null || o2.getStartDate() == null)
@@ -136,12 +143,14 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
             }
         });
 
+        //Save
         database.openWriteFile(this);
         for(int i = 0; i < trips.size(); i++){
             database.saveTrip(trips.get(i));
         }
         database.closeWriteFile();
 
+        //Restart and move to the Trip List Fragment with the new trip list
         Bundle args = new Bundle();
         args.putInt("size", trips.size());
         for(int i = 0; i < trips.size(); i++){
@@ -150,31 +159,69 @@ public class TripActivity extends FragmentActivity implements CreateTripFrag.OnF
         tripListFrag = new TripListFrag();
         tripListFrag.setArguments(args);
         fragmentTransaction = getFragmentManager().beginTransaction();
-
         fragmentTransaction.replace(R.id.TripLayout, tripListFrag, "TRIP_LIST");
         getFragmentManager().popBackStack();
         fragmentTransaction.commit();
     }
 
-    public void onFragmentInteraction(Uri uri){
+    //Unused onFragmentInteraction from CreateTripFrag
+    public void onFragmentInteraction(Uri uri){}
 
-    }
-
+    //Fragment Interaction from TripListFrag
+    //Starts the EventActivity with the selected trip
     public void onTripFragmentInteraction(Trip trip){
         Intent i = new Intent(this, EventActivity.class);
         i.putExtra("trip", trip);
         startActivity(i);
     }
 
+    //Fragment Interaction from TripListFrag
+    //Removes an existing trip if selected on Long press
     public void removeTrip(Trip trip){
         trips.remove(trip);
-
         database.openWriteFile(this);
         for(int i = 0; i < trips.size(); i++){
             database.saveTrip(trips.get(i));
         }
         database.closeWriteFile();
+    }
 
-        //refresh the array adapter or w/e
+    //Fragment Interaction from TripListFrag
+    //starts the CreateTrip fragment with the selected trip
+    public void editTrip(Trip trip){
+        CreateTripFrag createTripFrag = new CreateTripFrag();
+        Bundle args = new Bundle();
+
+        //sets the current trip to the selected trip from the trip list
+        currentTrip = trip;
+
+        //notifies the createTripFrag that we are going to edit a trip
+        newTrip = false;
+        args.putSerializable("newTrip", false);
+        createTripFrag.setArguments(args);
+
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.TripLayout, createTripFrag, "CREATE_TRIP");
+        if(getFragmentManager().getBackStackEntryCount() == 0) {
+            fragmentTransaction.addToBackStack("tripList");
+        }
+        fragmentTransaction.commit();
+    }
+
+    //Fragment Interaction from CreateTripFrag
+    //Fills the fragment with existing trip information
+    public void fillTrip(){
+        DatePicker startDatePicker = (DatePicker) findViewById(R.id.startDatePicker);
+        DatePicker endDatePicker = (DatePicker) findViewById(R.id.endDatePicker);
+        EditText nameOfTripEditText = (EditText) findViewById(R.id.editText);
+
+        nameOfTripEditText.setText(currentTrip.getName());
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(currentTrip.getStartDate());
+        startDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        cal.setTime(currentTrip.getEndDate());
+        endDatePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+
     }
 }

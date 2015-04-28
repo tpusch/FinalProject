@@ -28,6 +28,7 @@ public class CreateSequentialFile {
 
     public CreateSequentialFile(){}
 
+    //Opens or creates a file for writing, takes an android activity to open
     public void openWriteFile(Activity activity) {
         try {
             output = new ObjectOutputStream(activity.openFileOutput("trips.ser", Context.MODE_PRIVATE));
@@ -37,6 +38,7 @@ public class CreateSequentialFile {
         }
     }
 
+    //Opens but does not create a file for reading, takes an android activity to open
     public boolean openReadFile(Activity activity){
         try {
             input = new ObjectInputStream(activity.openFileInput("trips.ser"));
@@ -48,6 +50,7 @@ public class CreateSequentialFile {
         }
     }
 
+    //Loads all trips from a serializable file and returns them in an array list
     public ArrayList<Trip> loadTrips() {
         ArrayList<Trip> tripList = new ArrayList<Trip>();
         try{
@@ -68,6 +71,7 @@ public class CreateSequentialFile {
         return tripList;
     }
 
+    //Saves a single trip to a previously opened write file
     public void saveTrip(Trip trip) {
         try {
             output.writeObject(trip);
@@ -77,6 +81,7 @@ public class CreateSequentialFile {
         }
     }
 
+    //Closes a file opened for writing
     public void closeWriteFile() {
         try {
             if (output != null) {
@@ -88,6 +93,7 @@ public class CreateSequentialFile {
         }
     }
 
+    //Closes a file opened for reading
     public void closeReadFile() {
         try{
             if(input != null){
@@ -99,6 +105,7 @@ public class CreateSequentialFile {
         }
     }
 
+    //Helper function to retrieve the date from a provided date picker widget, returns a date
     public static java.util.Date getDateFromDatePicker(DatePicker datePicker){
         int day = datePicker.getDayOfMonth();
         int month = datePicker.getMonth();
